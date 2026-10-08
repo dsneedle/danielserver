@@ -1,0 +1,51 @@
+apiVersion: danielserver/v1
+kind: IncusInstanceInventory
+metadata:
+  host: lumpi
+  reconciledAt: "2026-10-08"
+spec:
+  instances:
+    - name: edge
+      type: virtual-machine
+      role: public-ingress
+      resources: { cpu: 2, memory: 2GiB, rootDisk: 15GiB }
+      networks:
+        - { device: public, parent: br0 }
+        - { device: domain, network: net-edge, address: 10.77.10.10 }
+        - { device: management, network: net-management, address: 10.77.50.10 }
+    - name: services
+      type: virtual-machine
+      role: shared-docker-services
+      resources: { cpu: 4, memory: 10GiB, rootDisk: 80GiB }
+      networks:
+        - { device: service, network: net-apps, address: 10.77.20.10 }
+        - { device: management, network: net-management, address: 10.77.50.20 }
+    - name: identity
+      type: virtual-machine
+      role: identity-gateway
+      resources: { cpu: 1, memory: 1GiB, rootDisk: 10GiB }
+      networks:
+        - { device: service, network: net-core, address: 10.77.30.10 }
+        - { device: management, network: net-management, address: 10.77.50.30 }
+    - name: grcviewer
+      type: virtual-machine
+      role: isolated-application
+      resources: { cpu: 2, memory: 3GiB, rootDisk: 30GiB }
+      networks:
+        - { device: service, network: net-apps, address: 10.77.20.11 }
+        - { device: management, network: net-management, address: 10.77.50.21 }
+    - name: docker-test
+      type: virtual-machine
+      role: integration-test
+      resources: { cpu: 2, memory: 2GiB }
+      networks:
+        - { device: service, network: net-apps, address: 10.77.20.91 }
+        - { device: management, network: net-management, address: 10.77.50.91 }
+    - name: hello-native
+      type: virtual-machine
+      role: native-routing-probe
+      resources: { cpu: 1, memory: 1GiB }
+      networks:
+        - { device: service, network: net-apps, address: 10.77.20.90 }
+        - { device: management, network: net-management, address: 10.77.50.90 }
+

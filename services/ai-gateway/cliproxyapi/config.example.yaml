@@ -1,0 +1,50 @@
+host: "0.0.0.0"
+port: 8317
+
+tls:
+  enable: false
+
+remote-management:
+  allow-remote: false
+  secret-key: "<bcrypt-or-runtime-secret>"
+  disable-control-panel: true
+
+auth-dir: /root/.cli-proxy-api
+
+# Keep one independently generated key per downstream client. Never reuse the
+# Home Assistant/Otto key for another caller.
+api-keys:
+  - "<client-key-1>"
+  - "<client-key-2>"
+  - "<client-key-3>"
+  - "<client-key-4>"
+  - "<homeassistant-otto-key>"
+  - "<strix-poc-key>"
+
+debug: false
+pprof:
+  enable: false
+  addr: 127.0.0.1:8316
+
+plugins:
+  enabled: true
+  dir: /CLIProxyAPI/plugins
+  configs:
+    otto-memory:
+      enabled: true
+      priority: 10
+      data_path: /CLIProxyAPI/data/otto-memory.sqlite
+      retrieval_enabled: true
+      caller_scope: "<sha256-scope-of-homeassistant-key>"
+      max_memories: 5
+      max_context_chars: 1800
+
+commercial-mode: false
+logging-to-file: true
+logs-max-total-size-mb: 100
+error-logs-max-files: 5
+usage-statistics-enabled: false
+request-retry: 1
+max-retry-credentials: 0
+max-retry-interval: 10
+

@@ -1,0 +1,39 @@
+apiVersion: danielserver/v1
+kind: BareMetalHost
+metadata:
+  name: lumpi
+  provider: hetzner
+  reconciledAt: "2026-10-08"
+spec:
+  operatingSystem:
+    distribution: Debian
+    release: "13"
+    architecture: x86_64
+  compute:
+    processor: Intel Core i7-8700
+    cores: 6
+    threads: 12
+    memoryGiB: 64
+  storage:
+    boot:
+      technology: mdraid1
+      filesystem: ext3
+    root:
+      technology: mdraid1
+      filesystem: ext4
+    swap:
+      technology: mdraid1
+      sizeGiB: 8
+    incus:
+      pool: incus-pool
+      driver: zfs
+      health: ONLINE
+  virtualization:
+    platform: Incus
+    version: 6.0.4
+    storagePool: local
+  management:
+    ssh: true
+    vpn: wireguard
+    publicAddressStoredInGit: false
+

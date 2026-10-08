@@ -1,0 +1,6 @@
+services:
+  cliproxyapi:
+    volumes:
+      - ./cliproxyapi/plugins:/CLIProxyAPI/plugins:ro
+      - ./cliproxyapi/data:/CLIProxyAPI/data
+

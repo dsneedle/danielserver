@@ -1,0 +1,33 @@
+apiVersion: danielserver/v1
+kind: IncusNetworkInventory
+metadata:
+  host: lumpi
+  reconciledAt: "2026-10-08"
+spec:
+  networks:
+    - name: net-edge
+      description: Private Edge trust domain
+      bridge: 10.77.10.1/24
+      ipv4Nat: false
+      ipv6: disabled
+    - name: net-apps
+      description: Applications trust domain
+      bridge: 10.77.20.1/24
+      ipv4Nat: false
+      ipv6: disabled
+    - name: net-core
+      description: DanielOS core trust domain
+      bridge: 10.77.30.1/24
+      ipv4Nat: false
+      ipv6: disabled
+    - name: net-automation
+      description: Automation and agent trust domain
+      bridge: 10.77.40.1/24
+      ipv4Nat: false
+      ipv6: disabled
+    - name: net-management
+      description: VPN-only administrative plane for instances
+      bridge: 10.77.50.1/24
+      ipv4Nat: false
+      ipv6: disabled
+

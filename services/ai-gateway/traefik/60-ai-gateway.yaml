@@ -1,0 +1,80 @@
+http:
+  routers:
+    cliproxyapi:
+      entryPoints:
+        - websecure
+      rule: >-
+        Host(`ai.service.lti.one`) && (Path(`/v1/models`) ||
+        Path(`/v1/chat/completions`) || PathPrefix(`/v1/responses`) ||
+        Path(`/v1/messages`) || Path(`/v1beta/models`) ||
+        PathPrefix(`/v1beta/models/`))
+      service: cliproxyapi
+      tls:
+        certResolver: hetzner-production
+        domains:
+          - main: "*.service.lti.one"
+        options: cliproxyapi-mtls@file
+      middlewares:
+        - cliproxyapi-rate-limit@file
+
+    cliproxyapi-homeassistant:
+      entryPoints:
+        - websecure
+      rule: >-
+        Host(`ha-ai.service.lti.one`) && (Path(`/v1/models`) ||
+        Path(`/v1/chat/completions`) || PathPrefix(`/v1/responses`) ||
+        Path(`/v1/messages`) || Path(`/v1beta/models`) ||
+        PathPrefix(`/v1beta/models/`))
+      service: cliproxyapi
+      tls:
+        certResolver: hetzner-production
+        domains:
+          - main: "*.service.lti.one"
+      middlewares:
+        - cliproxyapi-rate-limit@file
+
+    openwebui:
+      entryPoints:
+        - websecure
+      rule: Host(`openwebui.service.lti.one`) && PathPrefix(`/`)
+      service: openwebui
+      tls:
+        certResolver: hetzner-production
+        domains:
+          - main: "*.service.lti.one"
+      middlewares:
+        - strip-auth-identity@file
+        - entra-login@file
+        - entra-danielos-trusted@file
+
+  services:
+    cliproxyapi:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: http://10.77.20.10:8317
+    openwebui:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: http://10.77.20.10:8082
+        healthCheck:
+          path: /health
+          interval: 10s
+          timeout: 5s
+
+  middlewares:
+    cliproxyapi-rate-limit:
+      rateLimit:
+        average: 30
+        burst: 60
+        period: 1m
+
+tls:
+  options:
+    cliproxyapi-mtls:
+      clientAuth:
+        caFiles:
+          - /etc/traefik/client-ca/ai-client-ca.crt
+        clientAuthType: RequireAndVerifyClientCert
+

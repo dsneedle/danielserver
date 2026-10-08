@@ -1,0 +1,66 @@
+name: ai-gateway
+
+services:
+  cliproxyapi:
+    image: eceasy/cli-proxy-api@sha256:7f598ce64478a8a5f90ed76875e0e9b0e7d77b80e17184b13df18c3d5bdb3def
+    restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges=true
+    ports:
+      - 10.77.20.10:8317:8317
+    networks:
+      default:
+        ipv4_address: 172.20.11.10
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "/bin/bash -c 'exec 3<>/dev/tcp/127.0.0.1/8317'"
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 15s
+    volumes:
+      - ./cliproxyapi/config.yaml:/CLIProxyAPI/config.yaml:ro
+      - ./cliproxyapi/auths:/root/.cli-proxy-api:rw
+      - ./cliproxyapi/logs:/CLIProxyAPI/logs:rw
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m
+
+  openwebui:
+    image: ghcr.io/open-webui/open-webui@sha256:72c0ba641ba75e7aa52655cb242570906ececd09b1140fb736483038a22b3228
+    restart: unless-stopped
+    read_only: false
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges=true
+    ports:
+      - 10.77.20.10:8082:8080
+    networks:
+      default:
+        ipv4_address: 172.20.11.11
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -fsS http://127.0.0.1:8080/health >/dev/null
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 90s
+    env_file:
+      - ./openwebui/app.env
+    volumes:
+      - ./openwebui/data:/app/backend/data:rw
+
+networks:
+  default:
+    name: ai-gateway-internal
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.11.0/24
+          gateway: 172.20.11.1
+

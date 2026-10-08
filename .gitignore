@@ -1,0 +1,28 @@
+# Runtime secrets and credentials
+*.env
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+secrets/
+auths/
+
+# Runtime state and data
+data/
+logs/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+acme*.json
+
+# Generated and local files
+.DS_Store
+*.bak
+*.local
+*.tmp
+

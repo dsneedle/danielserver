@@ -1,0 +1,66 @@
+apiVersion: danielserver/v1
+kind: ServiceStack
+metadata:
+  name: ai-gateway
+  reconciledAt: "2026-10-08"
+spec:
+  placement:
+    host: lumpi
+    instance: services
+    path: /srv/docker/services/ai-gateway
+    address: 10.77.20.10
+    network: net-apps
+  orchestration:
+    type: docker-compose
+    project: ai-gateway
+    files:
+      - compose.yaml
+      - compose.override.yaml
+  components:
+    - name: cliproxyapi
+      role: model-gateway
+      internalPort: 8317
+      publishedAddress: 10.77.20.10:8317
+      healthcheck: tcp://127.0.0.1:8317
+    - name: openwebui
+      role: authenticated-web-client
+      internalPort: 8080
+      publishedAddress: 10.77.20.10:8082
+      healthcheck: http://127.0.0.1:8080/health
+  ingress:
+    instance: edge
+    file: /etc/traefik/dynamic/60-ai-gateway.yaml
+    endpoints:
+      - host: ai.service.lti.one
+        backend: cliproxyapi
+        transportSecurity: mtls
+        applicationAuth: cpa-bearer-key
+        rateLimit: { average: 30, burst: 60, period: 1m }
+      - host: ha-ai.service.lti.one
+        backend: cliproxyapi
+        transportSecurity: tls
+        applicationAuth: dedicated-homeassistant-cpa-bearer-key
+        sourceIpAllowlist: false
+        rationale: Dynamic residential addressing is incompatible with a static /32 allowlist.
+        rateLimit: { average: 30, burst: 60, period: 1m }
+      - host: openwebui.service.lti.one
+        backend: openwebui
+        transportSecurity: tls
+        applicationAuth: entra-forward-auth
+  persistence:
+    - path: cliproxyapi/auths
+      containsSecrets: true
+    - path: cliproxyapi/logs
+      containsSecrets: false
+    - path: cliproxyapi/data
+      containsSecrets: false
+    - path: cliproxyapi/plugins
+      containsSecrets: false
+    - path: openwebui/data
+      containsSecrets: true
+  runtimeSecrets:
+    - /srv/docker/services/ai-gateway/cliproxyapi/config.yaml
+    - /srv/docker/services/ai-gateway/cliproxyapi/secrets/homeassistant-api-key
+    - /srv/docker/services/ai-gateway/cliproxyapi/secrets/otto-memory-management.key
+    - /srv/docker/services/ai-gateway/openwebui/app.env
+
