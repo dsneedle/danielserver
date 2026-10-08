@@ -32,4 +32,3 @@ Before a change:
 5. Validate configuration and service health.
 6. Verify the user-facing path end to end.
 7. Commit the manifest change and record any intentional deviation.
-

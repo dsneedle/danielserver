@@ -47,4 +47,3 @@ usage-statistics-enabled: false
 request-retry: 1
 max-retry-credentials: 0
 max-retry-interval: 10
-

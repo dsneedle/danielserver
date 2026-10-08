@@ -30,4 +30,3 @@ spec:
       bridge: 10.77.50.1/24
       ipv4Nat: false
       ipv6: disabled
-

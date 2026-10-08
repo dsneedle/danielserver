@@ -48,4 +48,3 @@ spec:
       networks:
         - { device: service, network: net-apps, address: 10.77.20.90 }
         - { device: management, network: net-management, address: 10.77.50.90 }
-

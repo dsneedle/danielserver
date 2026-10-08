@@ -65,4 +65,3 @@ it is brought under manifest management.
 
 `ai-gateway` is the first fully captured stack. See
 [`services/ai-gateway/README.md`](../services/ai-gateway/README.md).
-

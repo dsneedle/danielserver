@@ -36,4 +36,3 @@ policy. It does not contain secrets or mutable state. See
 [`docs/source-of-truth.md`](docs/source-of-truth.md).
 
 The initial inventory was reconciled against live state on 2026-10-08.
-

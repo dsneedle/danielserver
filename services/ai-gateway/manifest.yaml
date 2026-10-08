@@ -63,4 +63,3 @@ spec:
     - /srv/docker/services/ai-gateway/cliproxyapi/secrets/homeassistant-api-key
     - /srv/docker/services/ai-gateway/cliproxyapi/secrets/otto-memory-management.key
     - /srv/docker/services/ai-gateway/openwebui/app.env
-

@@ -77,4 +77,3 @@ tls:
         caFiles:
           - /etc/traefik/client-ca/ai-client-ca.crt
         clientAuthType: RequireAndVerifyClientCert
-

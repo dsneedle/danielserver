@@ -78,4 +78,3 @@ roll back an ingress-only change, restore the previous
 `/etc/traefik/dynamic/60-ai-gateway.yaml`; Traefik watches the directory and
 reloads it automatically. Confirm Traefik remains active and rerun the endpoint
 checks.
-

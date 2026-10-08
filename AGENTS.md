@@ -27,4 +27,3 @@ Hetzner server named `lumpi`.
 The checked-in manifests must remain secret-free and suitable for a public
 repository. A manifest is authoritative for structure and security policy;
 runtime secrets and persistent data are deliberately external.
-

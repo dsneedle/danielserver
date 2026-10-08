@@ -36,4 +36,3 @@ spec:
     ssh: true
     vpn: wireguard
     publicAddressStoredInGit: false
-
